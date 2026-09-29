@@ -6,7 +6,7 @@ const port = 3000;
 
 app.use(express.json());
 
-const SUPERBASE_URL = 'https://supabase.co'; 
+const SUPERBASE_URL = 'https://fxjbxlitihywpjylwsjn.supabase.co'; 
 const SUPERBASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4amJ4bGl0aWh5d3BqeWx3c2puIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1NDU5NTcsImV4cCI6MjEwNjEyMTk1N30.xrN1egPNGZkO8dZB6QZftzEm7ki6Puu5HWMoX2KMb8k';
 
 const superbase = createClient(SUPERBASE_URL, SUPERBASE_KEY);
