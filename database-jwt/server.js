@@ -1,3 +1,5 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const supabase = require('./database.js');
@@ -7,7 +9,7 @@ const port = 3000;
 
 app.use(express.json());
 
-const kodeRahasia = 'databaseSaya';
+const kodeRahasia = process.env.JWT_SECRET || 'databaseSaya';
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
