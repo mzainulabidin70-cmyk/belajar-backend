@@ -33,4 +33,18 @@ function cekAdmin(req, res, next) {
     }
 };
 
-module.exports = { verifikasiToken, cekAdmin };
+function validasiBukuBaru(req, res, next) {
+    const { judul, penulis, tahun } = req.body;
+
+    if (!judul)
+        return res.status(400).json({ pesan: "Gagal!, Judul Buku harus diisi"});
+    if (!penulis)
+        return res.status(400).json({ pesan: "Gagal!, Nama penulis harus diisi"});
+    if (!tahun || typeof tahun !== 'number') {
+        return res.status(400).json({ pesan: "Gagal!, Tahun harus berupa angka"});
+    };
+
+    next();
+}
+
+module.exports = { verifikasiToken, cekAdmin, validasiBukuBaru, peminjamanBuku };
