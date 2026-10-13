@@ -5,9 +5,7 @@ function verifikasiToken(req, res, next) {
     const autHeader = req.headers['authorization'];
 
     if (!autHeader) {
-        return res.status(401).json({ 
-            pesan: "Akses ditolak! Kamu ni siapa?"
-        })
+        return res.status(401).json({ pesan: "Akses ditolak! Kamu ni siapa?" });
     }
 
     const token = autHeader.split(' ')[1];
@@ -17,9 +15,7 @@ function verifikasiToken(req, res, next) {
         req.user = dataTerverifikasi;
         next();
     } catch (error) {
-        return res.status(403).json({
-            pesan: "Maaf, walau kita saling kenal ,jika kartu/token nya gak sesuai maka gboleh masuk"
-        });
+        return res.status(403).json({ pesan: "Token tidak valid!" });
     }
 };
 
@@ -31,7 +27,7 @@ function cekAdmin(req, res, next) {
             pesan: "Akses ditolak! Kamu tuh anak magang bukan admin"
         });
     }
-};
+}
 
 function validasiBukuBaru(req, res, next) {
     const { judul, penulis, tahun } = req.body;
@@ -47,4 +43,4 @@ function validasiBukuBaru(req, res, next) {
     next();
 }
 
-module.exports = { verifikasiToken, cekAdmin, validasiBukuBaru, peminjamanBuku };
+module.exports = { verifikasiToken, cekAdmin, validasiBukuBaru, };

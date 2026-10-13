@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const { verifikasiToken, cekAdmin, validasiBukuBaru, peminjamanBuku } = require('./middleware');
+const { verifikasiToken, cekAdmin, validasiBukuBaru } = require('./middleware');
 
 const app = express();
 const port = 3000;
@@ -15,44 +15,50 @@ const databasePengguna = [
 ];
 
 const databaseBuku = [
-    { slug: "laskar-pelangi", judul: "Laskar Pelangi", penulis: "Andrean Hirata", tahun: 2005, dipinjamOleh: null },
-    { slug: "bumi-manusia", judul: "Bumi Manusia", penulis: "Pramoedya Ananta Toer", tahun: 1980, dipinjamOleh: null }
+    { slug: "laskar-pelangi", judul: "Laskar Pelangi", penulis: "Andrean Hirata", tahun: 2005, },
+    { slug: "bumi-manusia", judul: "Bumi Manusia", penulis: "Pramoedya Ananta Toer", tahun: 1980, }
 ];
 
 const databasePenulis = [
-    { slug: "andrea-hirata", nama: "Andrea Hirata", asal: "Belitung" },
+    { slug: "andrea-hirata", nama: "Andrean Hirata", asal: "Belitung" },
     { slug: "pramoedya", nama: "Pramoedya Ananta Toer", asal: "Blora" }
 ];
 
-app.get('/', (req, res) => {
-    res.send("Menguji apakah ini berhasil dan muncul dihalaman web");
-});
 
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     const userDitemukan = databasePengguna.find((user) => user.username === username && user.password === password);
 
-if (userDitemukan) {
-    const payload = {
-        id: userDitemukan.id,
-        role: userDitemukan.role,
-        name: userDitemukan.name
-    };
-    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-    return res.json({
-        pesan: "Login berhasil",
-        token: token
-    });
-  } else {
-    return res.status(401).json({
-        pesan: "Gagal login"
-    });
-   }
+    if (userDitemukan) {
+        const payload = {
+            id: userDitemukan.id,
+            role: userDitemukan.role,
+            name: userDitemukan.name
+        }
+        const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+        return res.json({ pesan: "Login berhasil", token });
+    }
+    return res.status(401).json({ pesan: "Gagal login" });
 });
 
 app.get('/me', verifikasiToken, (req, res) => {
+    const userDitemukan = databasePengguna.find((user) => user.id === req.user.id);
+
+    if (!userDitemukan) {
+        return res.status(404).json({ pesan: "User tidak ditemukan" });
+    }
+
+    const totalBuku = databaseBuku.filter((buku) => buku.penulis.toLowerCase() === userDitemukan.name.toLowerCase()).length;
+
     return res.json({
-        pesan: "Berhasil mengakses data", profil: req.user
+        pesan: "Berhasil mengambil data profil",
+        data: {
+            id: userDitemukan.id,
+            nama: userDitemukan.name,
+            username: userDitemukan.username,
+            role: userDitemukan.role,
+            totalBuku: totalBuku
+        }
     });
 });
 
@@ -65,7 +71,10 @@ app.get('/me-admin', verifikasiToken, cekAdmin, (req, res) => {
 //================================================
 
 app.get('/books', (req, res) => {
-    return res.json(databaseBuku);
+    return res.json({
+        pesan: "Berhasil mengambil semua data buku",
+        data: databaseBuku
+    });
 });
 
 app.get('/books/:slug', (req, res) => {
@@ -96,18 +105,39 @@ app.post('/books', validasiBukuBaru, (req, res) => {
 });
 
 app.get('/authors', (req, res) => {
-    return res.json(databasePenulis);
+    const totalBukuPenulis = databasePenulis.map((penulis) => {
+        const totalBuku = databaseBuku.filter((buku) => buku.penulis.toLowerCase() === penulis.nama.toLowerCase()).length;
+
+        return {
+            slug: penulis.slug,
+            nama: penulis.nama,
+            asal: penulis.asal,
+            totalBuku: totalBuku
+        };
+    });
+
+    return res.json({
+        pesan: "Berhasil mengambil semua data penulis",
+        data: totalBukuPenulis
+    });
 });
 
 app.get('/authors/:slug', (req, res) => {
     const slugg = req.params.slug;
+
     const penulisDitemukan = databasePenulis.find((p) => p.slug === slugg);
 
     if (!penulisDitemukan) {
         return res.status(404).json({ pesan: "Penulis tidak ditemukan!" });
     }
 
-    return res.json({ pesan: "Penulis berhasil ditemukan" });
+    return res.json({ 
+        pesan: "Penulis berhasil ditemukan",
+        data: {
+            nama: penulisDitemukan.nama,
+            asal: penulisDitemukan.asal
+        } 
+    });
 });
 
 //=================================================
