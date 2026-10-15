@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Perpustakaan PKL</title>
+</head>
+<body>
+    <h1>Sistem Perpustakaan</h1>
+
+    <div id="wadahAuth" style="border: 2px dashed gray; padding: 15px; width: 300px; margin-bottom: 20px;">
+        <h3>LOGIN SISPUS</h3>
+        <input type="text" id="inputUsername" placeholder="Username"><br><br>
+        <input type="password" id="inputPassword" placeholder="Password"><br><br>
+        <button id="tombolLogin">Login</button>
+        <p id="statusLogin" style="margin-top: 10px; font-weight: bold;"></p>
+    </div>
+
+    <div id="halamanUtama" style="display: none;">
+        <button id="tombolLogout" style="background: red; color: white; margin-bottom: 10px;">Logout</button>
+        <div id="wadahBuku" style="margin-top: 20px;"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
