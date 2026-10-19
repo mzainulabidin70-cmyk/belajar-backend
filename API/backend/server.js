@@ -61,7 +61,7 @@ app.post('/login', async (req, res) => {
 
 app.get('/books', verifikasiToken, (req, res) => {
     return res.json({
-        pesan: "Berhasil mengambil semua data buku",
+        pesan: "Ini adalah kartu buku anda",
         data: databaseBuku
     });
 });
