@@ -19,16 +19,6 @@ function verifikasiToken(req, res, next) {
     }
 };
 
-function cekAdmin(req, res, next) {
-    if (req.user && req.user.role === 'admin') {
-        next();
-    } else {
-        return res.status(403).json({
-            pesan: "Akses ditolak! Kamu tuh anak magang bukan admin"
-        });
-    }
-}
-
 function validasiBukuBaru(req, res, next) {
     const { judul, penulis, tahun } = req.body;
 
@@ -43,4 +33,4 @@ function validasiBukuBaru(req, res, next) {
     next();
 }
 
-module.exports = { verifikasiToken, cekAdmin, validasiBukuBaru, };
+module.exports = { verifikasiToken, validasiBukuBaru, };
