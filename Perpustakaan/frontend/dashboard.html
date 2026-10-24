@@ -69,6 +69,13 @@
         </div>
     </div>
     
-    <script src="script.js"></script>
+    <div id="loading-screen" class="hidden fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-900/65 text-white">
+        <div class="h-10 w-10 animate-spin rounded-full border-4 border-slate-300 border-t-blue-500 mb-3"></div>
+        <span id="loading-text" class="text-base font-semibold">Memuat data...</span>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="buku.js"></script>
 </body>
 </html>
